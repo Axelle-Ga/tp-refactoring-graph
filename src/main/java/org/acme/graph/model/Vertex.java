@@ -1,5 +1,8 @@
 package org.acme.graph.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.locationtech.jts.geom.Coordinate;
 
@@ -23,20 +26,19 @@ public class Vertex {
 	private Coordinate coordinate;
 
 	/**
-	 * dijkstra - coût pour atteindre le sommet
+	 * Liste de aretes entrantes
 	 */
-	private double cost;
+	@JsonIgnore
+	private List<Edge> inEdges;
 	/**
-	 * dijkstra - arc entrant avec le meilleur coût
+	 * Liste de aretes sortantes
 	 */
-	private Edge reachingEdge;
-	/**
-	 * dijkstra - indique si le sommet est visité
-	 */
-	private boolean visited;
+	@JsonIgnore
+	private List<Edge> outEdges;
 
-	public Vertex() {
-
+	Vertex() {
+		this.inEdges = new ArrayList<>();
+		this.outEdges = new ArrayList<>();
 	}
 
 	public String getId() {
@@ -55,30 +57,13 @@ public class Vertex {
 		this.coordinate = coordinate;
 	}
 
-	@JsonIgnore
-	public double getCost() {
-		return cost;
+
+	public List<Edge> getInEdges(){
+		return this.inEdges;
 	}
 
-	public void setCost(double cost) {
-		this.cost = cost;
-	}
-
-	@JsonIgnore
-	public Edge getReachingEdge() {
-		return reachingEdge;
-	}
-
-	public void setReachingEdge(Edge reachingEdge) {
-		this.reachingEdge = reachingEdge;
-	}
-
-	public boolean isVisited() {
-		return visited;
-	}
-
-	public void setVisited(boolean visited) {
-		this.visited = visited;
+	public List<Edge> getOutEdges(){
+		return this.outEdges;
 	}
 
 	@Override

@@ -33,8 +33,27 @@ public class Edge {
 	 */
 	private Vertex target;
 
-	public Edge() {
+	/**
+	 * Geometry du tronçon
+	 */
+	private LineString geometry;
 
+	Edge(Vertex source, Vertex target) {
+		if (source == null || target == null) {
+			throw new NullPointerException("Vertice(s) is(are) null");
+		}else{
+		this.source = source;
+		this.target = target;
+
+		source.getOutEdges().add(this);
+		target.getInEdges().add(this);
+
+		GeometryFactory gf = new GeometryFactory();
+		this.geometry =  gf.createLineString(new Coordinate[] {
+					source.getCoordinate(),
+					target.getCoordinate()
+				});
+		}
 	}
 
 	public String getId() {
@@ -56,9 +75,6 @@ public class Edge {
 		return source;
 	}
 
-	public void setSource(Vertex source) {
-		this.source = source;
-	}
 
 	/**
 	 * Cible avec rendu JSON sous forme d'identifiant
@@ -71,8 +87,13 @@ public class Edge {
 		return target;
 	}
 
-	public void setTarget(Vertex target) {
-		this.target = target;
+
+	public void setGeometry(LineString geometry){
+		this.geometry = geometry;
+	}
+
+	public LineString getGeometry(){
+			return this.geometry;
 	}
 
 	/**
@@ -81,17 +102,9 @@ public class Edge {
 	 * @return
 	 */
 	public double getCost() {
-		return source.getCoordinate().distance(target.getCoordinate());
+		return this.getGeometry().getLength();
 	}
 
-	@JsonSerialize(using = GeometrySerializer.class)
-	public LineString getGeometry() {
-		GeometryFactory gf = new GeometryFactory();
-		return gf.createLineString(new Coordinate[] {
-			source.getCoordinate(),
-			target.getCoordinate()
-		});
-	}
 
 	@Override
 	public String toString() {
